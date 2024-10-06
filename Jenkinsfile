@@ -10,16 +10,12 @@ pipeline {
                 '''
             }
         }
-        stage('Deploy') {
-            steps {
-                retry(3) {
-                    sh './flakey-deploy.sh'
-                }
-                timeout(time: 3, unit: 'MINUTES') {
-                    sh './health-check.sh'
-                }
-            }
-        }
+        // Optionally, you can keep the Deploy stage for future use:
+        // stage('Deploy') {
+        //     steps {
+        //         sh './flakey-deploy.sh'
+        //     }
+        // }
     }
     post {
         always {
@@ -39,4 +35,3 @@ pipeline {
         }
     }
 }
-
