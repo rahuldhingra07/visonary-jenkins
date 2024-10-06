@@ -1,37 +1,28 @@
 pipeline {
     agent any
-
     stages {
-        stage('Checkout') {
+        stage('No-op') {
             steps {
-                checkout scm
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh './gradlew build'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh './gradlew test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                
-                echo 'Deploying...'
+                sh 'ls'
             }
         }
     }
-
     post {
         always {
-            junit 'build/test-results/test/TEST-*.xml'
-            archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
+            echo 'One way or another, I have finished'
+            deleteDir() /* clean up our workspace */
+        }
+        success {
+            echo 'I succeeded!'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'I failed :('
+        }
+        changed {
+            echo 'Things were different before...'
         }
     }
 }
