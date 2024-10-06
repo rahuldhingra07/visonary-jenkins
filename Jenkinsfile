@@ -11,15 +11,18 @@ pipeline {
 
         stage('Build') {
             steps {
-                        dir('./gradlew build') { 
-                sh './gradlew build'
+                dir('path/to/your/project') { // Change to the correct path where your gradlew file is located
+                    sh './gradlew build'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                // Run the tests
-                sh './gradlew test'
+                dir('path/to/your/project') { // Change to the correct path where your gradlew file is located
+                    // Run the tests
+                    sh './gradlew test'
+                }
             }
         }
     }
