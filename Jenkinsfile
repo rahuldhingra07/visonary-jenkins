@@ -1,28 +1,38 @@
 pipeline {
     agent any
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
-        stage('No-op') {
+        stage('Build') {
             steps {
-                sh 'ls'
+                echo 'Building...'
+                sh './gradlew build'
             }
         }
-    }
-    post {
-        always {
-            echo 'One way or another, I have finished'
-            deleteDir() /* clean up our workspace */
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                sh './gradlew test'
+            }
         }
-        success {
-            echo 'I succeeded!'
+        stage('Deploy - Staging') {
+            steps {
+                echo 'Deploying to Staging...'
+                sh './deploy staging'
+                sh './run-smoke-tests'
+            }
         }
-        unstable {
-            echo 'I am unstable :/'
+        stage('Sanity check') {
+            steps {
+                input "Does the staging environment look ok?"
+            }
         }
-        failure {
-            echo 'I failed :('
-        }
-        changed {
-            echo 'Things were different before...'
+        stage('Deploy - Production') {
+            steps {
+                echo 'Deploying to Production...'
+                sh './deploy production'
+            }
         }
     }
 }
