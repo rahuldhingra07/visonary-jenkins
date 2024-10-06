@@ -11,7 +11,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                // Build the project using Gradle
+                        dir('./gradlew build') { 
                 sh './gradlew build'
             }
         }
